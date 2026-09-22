@@ -130,6 +130,15 @@ fi
 read -rp "Delete bootstrap script after setup? (y/n): " DELETE_SCRIPT
 
 if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
+
+    SCRIPT_NAME=$(basename "$0")
+
+    # Remove script from .gitignore if present
+    if [[ -f ".gitignore" ]]; then
+        grep -vxF "$SCRIPT_NAME" .gitignore > .gitignore.tmp || true
+        mv .gitignore.tmp .gitignore
+    fi
+
     rm -- "$0"
     echo "Bootstrap script deleted."
 fi
