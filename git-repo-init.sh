@@ -23,7 +23,7 @@ echo "https://github.com/new"
 echo
 
 # Get remote URL
-read -rp "Enter remote repository URL (default is 'main' if this is left blank): " REMOTE_URL
+read -rp "Enter remote repository URL: " REMOTE_URL
 
 if [[ -z "$REMOTE_URL" ]]; then
     echo "Error: Repository URL is required."
@@ -31,7 +31,7 @@ if [[ -z "$REMOTE_URL" ]]; then
 fi
 
 # Get branch name with default
-read -rp "Enter main branch name [main\]: " MAIN_BRANCH
+read -rp "Enter main branch name [main\] (default is 'main' if this is left blank): " MAIN_BRANCH
 MAIN_BRANCH="${MAIN_BRANCH:-main}"
 
 echo
