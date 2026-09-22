@@ -2,7 +2,10 @@
 A bash script that automates the process of initialising a Git repository, adding the remote origin, making an initial commit and pushing to the remote.
 
 ## Installation
-Run this command in your project folder to download the script
+Run this command in your project folder to download the script:
+```bash
+curl -O https://raw.githubusercontent.com/paulmuldoon/git-repo-initialiser/refs/heads/main/git-repo-init.sh
+```
 
 ## Usage
 ```bash
@@ -13,3 +16,6 @@ The script will ask:
 * The name of the main branch ('main' if this is left blank)
 * Whether you want to create an initial commit
 * Whether you want to push to remote
+* Whether you want to delete the script from your project folder once the initialisation is complete
+
+The script will create a .gitignore file if one does not already exist, then add itself to gitignore to prevent it from being pushed to the remote. 
