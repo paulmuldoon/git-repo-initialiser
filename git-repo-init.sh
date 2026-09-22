@@ -1,8 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
 echo "=== Git Repository Initialiser ==="
+echo "This script will initialise a new Git repository and set up a remote."
+echo
+
+# Check Git is installed
+if ! command -v git >/dev/null 2>&1; then
+    echo "Error: Git is not installed."
+    exit 1
+fi
 
 # Check if already a Git repository
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -10,26 +18,25 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     exit 1
 fi
 
-# Prompt user to create a new remote repository if none exists
-echo "If you don't have a remote repository, you can create one at https://github.com/new"
+echo "If you need to create a new GitHub repository first, visit:"
+echo "https://github.com/new"
+echo
 
 # Get remote URL
 read -rp "Enter remote repository URL: " REMOTE_URL
 
-# Get branch name
-read -rp "Enter main branch name: " MAIN_BRANCH
-
-# Validate input
-if [[ -z "$REMOTE_URL" || -z "$MAIN_BRANCH" ]]; then
-    echo "Error: Repository URL and branch name are required."
+if [[ -z "$REMOTE_URL" ]]; then
+    echo "Error: Repository URL is required."
     exit 1
 fi
 
-# Initialise repository
-git init
+# Get branch name with default
+read -rp "Enter main branch name [main\]: " MAIN_BRANCH
+MAIN_BRANCH="${MAIN_BRANCH:-main}"
 
-# Create primary branch
-git checkout -b "$MAIN_BRANCH"
+echo
+echo "Using branch: $MAIN_BRANCH"
+echo
 
 # Validate remote repository
 echo "Validating remote repository..."
@@ -38,20 +45,19 @@ OUTPUT=$(git ls-remote "$REMOTE_URL" 2>&1)
 STATUS=$?
 
 if [ $STATUS -ne 0 ]; then
+    echo
     echo "Unable to access remote repository."
     echo "$OUTPUT"
+    echo
 
     case "$OUTPUT" in
         *"Permission denied (publickey)"*)
-            echo ""
             echo "Hint: Configure your SSH key and ensure it has access to the repository."
             ;;
         *"Authentication failed"*)
-            echo ""
             echo "Hint: Check your username, PAT, or credential manager configuration."
             ;;
         *"Repository not found"*)
-            echo ""
             echo "Hint: Verify the repository URL is correct."
             ;;
     esac
@@ -60,8 +66,31 @@ if [ $STATUS -ne 0 ]; then
 fi
 
 echo "Remote repository is reachable."
+
+# Check whether remote already contains branches
+if git ls-remote --heads "$REMOTE_URL" | grep -q .; then
+    echo
+    echo "Warning: Remote repository already contains branches."
+    echo "You may need to pull or merge before pushing."
+fi
+
+echo
+echo "Initialising repository..."
+
+git init -b "$MAIN_BRANCH"
+
 # Add remote
 git remote add origin "$REMOTE_URL"
+
+# Add script to .gitignore
+SCRIPT_NAME=$(basename "$0")
+
+touch .gitignore
+
+if ! grep -qxF "$SCRIPT_NAME" .gitignore; then
+    echo "$SCRIPT_NAME" >> .gitignore
+    echo "Added $SCRIPT_NAME to .gitignore"
+fi
 
 echo
 echo "Repository initialised successfully."
@@ -72,9 +101,19 @@ echo "Main branch: $MAIN_BRANCH"
 read -rp "Create initial commit? (y/n): " CREATE_COMMIT
 
 if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
-    touch README.md
+
+    # Create README only if one doesn't already exist
+    if [[ ! -f README.md ]]; then
+        touch README.md
+    fi
+
     git add .
-    git commit -m "Initial commit"
+
+    if git diff --cached --quiet; then
+        echo "No files to commit."
+    else
+        git commit -m "Initial commit"
+    fi
 
     read -rp "Push to remote? (y/n): " PUSH
 
@@ -82,3 +121,14 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
         git push -u origin "$MAIN_BRANCH"
     fi
 fi
+
+# Optional cleanup
+read -rp "Delete bootstrap script after setup? (y/n): " DELETE_SCRIPT
+
+if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
+    rm -- "$0"
+    echo "Bootstrap script deleted."
+fi
+
+echo
+echo "Setup complete."
