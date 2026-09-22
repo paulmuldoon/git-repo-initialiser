@@ -23,7 +23,7 @@ echo "https://github.com/new"
 echo
 
 # Get remote URL
-read -rp "Enter remote repository URL: " REMOTE_URL
+read -rp "Enter remote repository URL (default is 'main' if this is left blank): " REMOTE_URL
 
 if [[ -z "$REMOTE_URL" ]]; then
     echo "Error: Repository URL is required."
