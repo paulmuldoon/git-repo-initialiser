@@ -82,10 +82,14 @@ git init -b "$MAIN_BRANCH"
 # Add remote
 git remote add origin "$REMOTE_URL"
 
+# Ensure .gitignore exists, if not, create it
+if [[ ! -f ".gitignore" ]]; then
+    touch .gitignore
+    echo "Created .gitignore"
+fi
+
 # Add script to .gitignore
 SCRIPT_NAME=$(basename "$0")
-
-touch .gitignore
 
 if ! grep -qxF "$SCRIPT_NAME" .gitignore; then
     echo "$SCRIPT_NAME" >> .gitignore
