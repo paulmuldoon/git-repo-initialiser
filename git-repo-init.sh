@@ -137,6 +137,7 @@ if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
     if [[ -f ".gitignore" ]]; then
         grep -vxF "$SCRIPT_NAME" .gitignore > .gitignore.tmp || true
         mv .gitignore.tmp .gitignore
+        echo "Removed $SCRIPT_NAME from .gitignore"
     fi
 
     rm -- "$0"
