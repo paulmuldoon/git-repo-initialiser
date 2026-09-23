@@ -36,7 +36,7 @@ if [[ -z "$REMOTE_URL" ]]; then
 fi
 
 # Get branch name with default
-read -rp "Enter main branch name [main\] (default is 'main' if this is left blank): " MAIN_BRANCH
+read -rp "Enter main branch name (default is 'main' if this is left blank): " MAIN_BRANCH
 MAIN_BRANCH="${MAIN_BRANCH:-main}"
 
 echo
@@ -101,10 +101,11 @@ if ! grep -qxF "$SCRIPT_NAME" .gitignore; then
     echo "Added $SCRIPT_NAME to .gitignore"
 fi
 
-echo
 echo "Repository initialised successfully."
+echo
 echo "Remote: $REMOTE_URL"
 echo "Main branch: $MAIN_BRANCH"
+echo
 
 # Optional first commit
 read -rp "Create initial commit? (y/n): " CREATE_COMMIT
@@ -131,6 +132,8 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
     fi
 fi
 
+echo
+
 # Optional cleanup
 read -rp "Delete bootstrap script after setup? (y/n): " DELETE_SCRIPT
 
@@ -142,6 +145,7 @@ if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
     if [[ -f ".gitignore" ]]; then
         grep -vxF "$SCRIPT_NAME" .gitignore > .gitignore.tmp || true
         mv .gitignore.tmp .gitignore
+        echo
         echo "Removed $SCRIPT_NAME from .gitignore"
     fi
 
