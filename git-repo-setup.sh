@@ -11,6 +11,9 @@ if ! command -v git >/dev/null 2>&1; then
     echo "Error: Git is not installed."
     echo "Visit https://git-scm.com/install/ for installation instructions."
     exit 1
+else
+    GIT_VERSION=$(git --version)
+    echo "✓ Git is installed: $GIT_VERSION"
 fi
 
 # Check if already a Git repository
