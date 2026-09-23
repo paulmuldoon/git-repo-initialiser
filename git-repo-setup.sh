@@ -35,6 +35,8 @@ if [[ -z "$REMOTE_URL" ]]; then
     exit 1
 fi
 
+echo
+
 # Get branch name with default
 read -rp "Enter main branch name (default is 'main' if this is left blank): " MAIN_BRANCH
 MAIN_BRANCH="${MAIN_BRANCH:-main}"
