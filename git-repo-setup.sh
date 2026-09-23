@@ -2,24 +2,28 @@
 
 set -e
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 echo "=== Git Repository Initialiser ==="
 echo "This script will initialise a new Git repository and set up a remote."
 echo
 
 # Check Git is installed
 if ! command -v git >/dev/null 2>&1; then
-    echo "Error: Git is not installed."
+    echo "${RED}✗ Error: Git is not installed.${NC}"
     echo "Visit https://git-scm.com/install/ for installation instructions."
     exit 1
 else
     GIT_VERSION=$(git --version)
-    echo "✓ Git is installed: $GIT_VERSION"
+    echo "${GREEN}✓ Git is installed: $GIT_VERSION${NC}"
     echo
 fi
 
 # Check if already a Git repository
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo "Error: This directory is already a Git repository."
+    echo "${RED}✗ Error: This directory is already a Git repository.${NC}"
     exit 1
 fi
 
@@ -31,7 +35,7 @@ echo
 read -rp "Enter remote repository URL: " REMOTE_URL
 
 if [[ -z "$REMOTE_URL" ]]; then
-    echo "Error: Repository URL is required."
+    echo "${RED}✗ Error: Repository URL is required.${NC}"
     exit 1
 fi
 
@@ -53,7 +57,7 @@ STATUS=$?
 
 if [ $STATUS -ne 0 ]; then
     echo
-    echo "Unable to access remote repository."
+    echo "${RED}✗ Unable to access remote repository.${NC}"
     echo "$OUTPUT"
     echo
 
@@ -72,12 +76,12 @@ if [ $STATUS -ne 0 ]; then
     exit 1
 fi
 
-echo "Remote repository is reachable."
+echo "${GREEN}✓ Remote repository is reachable.${NC}"
 
 # Check whether remote already contains branches
 if git ls-remote --heads "$REMOTE_URL" | grep -q .; then
     echo
-    echo "Warning: Remote repository already contains branches."
+    echo "${RED}✗ Warning: Remote repository already contains branches.${NC}"
     echo "You may need to pull or merge before pushing."
 fi
 
@@ -92,7 +96,7 @@ git remote add origin "$REMOTE_URL"
 # Ensure .gitignore exists, if not, create it
 if [[ ! -f ".gitignore" ]]; then
     touch .gitignore
-    echo "Created .gitignore"
+    echo "${GREEN}✓ Created .gitignore${NC}"
 fi
 
 # Add script to .gitignore
@@ -100,10 +104,10 @@ SCRIPT_NAME=$(basename "$0")
 
 if ! grep -qxF "$SCRIPT_NAME" .gitignore; then
     echo "$SCRIPT_NAME" >> .gitignore
-    echo "Added $SCRIPT_NAME to .gitignore"
+    echo "${GREEN}✓ Added $SCRIPT_NAME to .gitignore${NC}"
 fi
 
-echo "Repository initialised successfully."
+echo "${GREEN}✓ Repository initialised successfully.${NC}"
 echo
 echo "Remote: $REMOTE_URL"
 echo "Main branch: $MAIN_BRANCH"
@@ -146,13 +150,12 @@ if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
     if [[ -f ".gitignore" ]]; then
         grep -vxF "$SCRIPT_NAME" .gitignore > .gitignore.tmp || true
         mv .gitignore.tmp .gitignore
-        echo
-        echo "Removed $SCRIPT_NAME from .gitignore"
+        echo "${GREEN}✓ Removed $SCRIPT_NAME from .gitignore${NC}"
     fi
 
     rm -- "$0"
-    echo "Bootstrap script deleted."
+    echo "${GREEN}✓ Bootstrap script deleted.${NC}"
 fi
 
 echo
-echo "Setup complete."
+echo "${GREEN}✓ Setup complete!${NC}"
