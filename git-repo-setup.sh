@@ -106,6 +106,7 @@ printf "Main branch: %s\n\n" "$MAIN_BRANCH"
 
 # Optional first commit
 read -rp "Create initial commit? (y/n): " CREATE_COMMIT
+printf "\n"
 
 if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
 
@@ -125,6 +126,8 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
 
     printf "\n"
     read -rp "Push to remote? (y/n): " PUSH
+
+    printf "\n"
 
     if [[ "$PUSH" =~ ^[Yy]$ ]]; then
         git push -u origin "$MAIN_BRANCH"
