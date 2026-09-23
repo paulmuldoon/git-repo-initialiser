@@ -127,14 +127,13 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
         git commit -m "Initial commit"
     fi
 
+    echo
     read -rp "Push to remote? (y/n): " PUSH
 
     if [[ "$PUSH" =~ ^[Yy]$ ]]; then
         git push -u origin "$MAIN_BRANCH"
     fi
 fi
-
-echo
 
 # Optional cleanup
 read -rp "Delete bootstrap script after setup? (y/n): " DELETE_SCRIPT
