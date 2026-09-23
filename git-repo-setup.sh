@@ -9,6 +9,7 @@ echo
 # Check Git is installed
 if ! command -v git >/dev/null 2>&1; then
     echo "Error: Git is not installed."
+    echo "Visit https://git-scm.com/install/ for installation instructions."
     exit 1
 fi
 
