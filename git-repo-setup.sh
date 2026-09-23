@@ -100,7 +100,7 @@ if ! grep -qxF "$SCRIPT_NAME" .gitignore; then
     printf "${GREEN}✓ Added $SCRIPT_NAME to .gitignore${NC}\n"
 fi
 
-printf "\n${GREEN}✓ Repository initialised successfully.${NC}\n"
+printf "\n${GREEN}✓ Repository initialised successfully.${NC}\n\n"
 printf "Remote: %s\n" "$REMOTE_URL"
 printf "Main branch: %s\n\n" "$MAIN_BRANCH"
 
@@ -120,6 +120,7 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
         printf "No files to commit.\n"
     else
         git commit -m "Initial commit"
+        printf "\n${GREEN}✓ Initial commit created successfully.${NC}\n"
     fi
 
     printf "\n"
@@ -127,12 +128,14 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
 
     if [[ "$PUSH" =~ ^[Yy]$ ]]; then
         git push -u origin "$MAIN_BRANCH"
+        printf "\n${GREEN}✓ Initial push successful.${NC}\n"
     fi
 fi
 
 # Optional cleanup
 printf "\n"
 read -rp "Delete bootstrap script after setup? (y/n): " DELETE_SCRIPT
+printf "\n"
 
 if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
 
