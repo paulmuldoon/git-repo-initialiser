@@ -6,87 +6,91 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-echo "=== Git Repository Initialiser ==="
-echo "This script will initialise a new Git repository and set up a remote."
-echo
+printf "=== Git Repository Initialiser ==="
+printf "\n"
+printf "This script will initialise a new Git repository and set up a remote."
+printf "\n"
 
 # Check Git is installed
 if ! command -v git >/dev/null 2>&1; then
-    echo "${RED}✗ Error: Git is not installed.${NC}"
-    echo "Visit https://git-scm.com/install/ for installation instructions."
+    printf "${RED}✗ Error: Git is not installed.${NC}"
+    printf "\n"
+    printf "Visit https://git-scm.com/install/ for installation instructions."
+    printf "\n"
     exit 1
 else
     GIT_VERSION=$(git --version)
-    echo "${GREEN}✓ Git is installed: $GIT_VERSION${NC}"
-    echo
+    printf "${GREEN}✓ Git is installed: $GIT_VERSION${NC}"
+    printf "\n"
 fi
 
 # Check if already a Git repository
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo "${RED}✗ Error: This directory is already a Git repository.${NC}"
+    printf "${RED}✗ Error: This directory is already a Git repository.${NC}"
+    printf "\n"
     exit 1
 fi
 
-echo "If you need to create a new GitHub repository first, visit:"
-echo "https://github.com/new"
-echo
+printf "If you need to create a new GitHub repository first, visit:"
+printf "\n"
+printf "https://github.com/new"
+printf "\n"
 
 # Get remote URL
 read -rp "Enter remote repository URL: " REMOTE_URL
 
 if [[ -z "$REMOTE_URL" ]]; then
-    echo "${RED}✗ Error: Repository URL is required.${NC}"
+    printf "${RED}✗ Error: Repository URL is required.${NC}"
     exit 1
 fi
 
-echo
+printf "\n"
 
 # Get branch name with default
 read -rp "Enter main branch name (default is 'main' if this is left blank): " MAIN_BRANCH
 MAIN_BRANCH="${MAIN_BRANCH:-main}"
 
-echo
-echo "Using branch: $MAIN_BRANCH"
-echo
+printf "\n"
+printf "Using branch: $MAIN_BRANCH"
+printf "\n"
 
 # Validate remote repository
-echo "Validating remote repository..."
+printf "Validating remote repository...\n"
 
 OUTPUT=$(git ls-remote "$REMOTE_URL" 2>&1)
 STATUS=$?
 
 if [ $STATUS -ne 0 ]; then
-    echo
-    echo "${RED}✗ Unable to access remote repository.${NC}"
-    echo "$OUTPUT"
-    echo
+    printf "\n"
+    printf "${RED}✗ Unable to access remote repository.${NC}"
+    printf "$OUTPUT"
+    printf "\n"
 
     case "$OUTPUT" in
         *"Permission denied (publickey)"*)
-            echo "Hint: Configure your SSH key and ensure it has access to the repository."
+            printf "Hint: Configure your SSH key and ensure it has access to the repository."
             ;;
         *"Authentication failed"*)
-            echo "Hint: Check your username, PAT, or credential manager configuration."
+            printf "Hint: Check your username, PAT, or credential manager configuration."
             ;;
         *"Repository not found"*)
-            echo "Hint: Verify the repository URL is correct."
+            printf "Hint: Verify the repository URL is correct."
             ;;
     esac
 
     exit 1
 fi
 
-echo "${GREEN}✓ Remote repository is reachable.${NC}"
+printf "${GREEN}✓ Remote repository is reachable.${NC}"
 
 # Check whether remote already contains branches
 if git ls-remote --heads "$REMOTE_URL" | grep -q .; then
-    echo
-    echo "${RED}✗ Warning: Remote repository already contains branches.${NC}"
-    echo "You may need to pull or merge before pushing."
+    printf "${RED}✗ Warning: Remote repository already contains branches.${NC}"
+    printf "You may need to pull or merge before pushing."
 fi
 
-echo
-echo "Initialising repository..."
+printf "\n"
+printf "Initialising repository..."
 
 git init -b "$MAIN_BRANCH"
 
@@ -96,7 +100,7 @@ git remote add origin "$REMOTE_URL"
 # Ensure .gitignore exists, if not, create it
 if [[ ! -f ".gitignore" ]]; then
     touch .gitignore
-    echo "${GREEN}✓ Created .gitignore${NC}"
+    printf "${GREEN}✓ Created .gitignore${NC}"
 fi
 
 # Add script to .gitignore
@@ -104,14 +108,15 @@ SCRIPT_NAME=$(basename "$0")
 
 if ! grep -qxF "$SCRIPT_NAME" .gitignore; then
     echo "$SCRIPT_NAME" >> .gitignore
-    echo "${GREEN}✓ Added $SCRIPT_NAME to .gitignore${NC}"
+    printf "${GREEN}✓ Added $SCRIPT_NAME to .gitignore${NC}"
 fi
 
-echo "${GREEN}✓ Repository initialised successfully.${NC}"
-echo
-echo "Remote: $REMOTE_URL"
-echo "Main branch: $MAIN_BRANCH"
-echo
+printf "${GREEN}✓ Repository initialised successfully.${NC}"
+printf "\n"
+printf "Remote: $REMOTE_URL"
+printf "\n"
+printf "Main branch: $MAIN_BRANCH"
+printf "\n"
 
 # Optional first commit
 read -rp "Create initial commit? (y/n): " CREATE_COMMIT
@@ -126,12 +131,12 @@ if [[ "$CREATE_COMMIT" =~ ^[Yy]$ ]]; then
     git add .
 
     if git diff --cached --quiet; then
-        echo "No files to commit."
+        printf "No files to commit."
     else
         git commit -m "Initial commit"
     fi
 
-    echo
+    printf "\n"
     read -rp "Push to remote? (y/n): " PUSH
 
     if [[ "$PUSH" =~ ^[Yy]$ ]]; then
@@ -150,12 +155,12 @@ if [[ "$DELETE_SCRIPT" =~ ^[Yy]$ ]]; then
     if [[ -f ".gitignore" ]]; then
         grep -vxF "$SCRIPT_NAME" .gitignore > .gitignore.tmp || true
         mv .gitignore.tmp .gitignore
-        echo "${GREEN}✓ Removed $SCRIPT_NAME from .gitignore${NC}"
+        printf "${GREEN}✓ Removed $SCRIPT_NAME from .gitignore${NC}"
     fi
 
     rm -- "$0"
-    echo "${GREEN}✓ Bootstrap script deleted.${NC}"
+    printf "${GREEN}✓ Bootstrap script deleted.${NC}"
 fi
 
-echo
-echo "${GREEN}✓ Setup complete!${NC}"
+printf "\n"
+printf "${GREEN}✓ Setup complete!${NC}"
