@@ -29,12 +29,13 @@ printf "If you need to create a new GitHub repository first, visit:\n"
 printf "https://github.com/new\n\n"
 
 # Get remote URL
-read -rp "Enter remote repository URL: " REMOTE_URL
+while [[ -z "$REMOTE_URL" ]]; do
+    read -rp "Enter remote repository URL: " REMOTE_URL
 
-if [[ -z "$REMOTE_URL" ]]; then
-    printf "${RED}✗ Error: Repository URL is required.${NC}\n"
-    exit 1
-fi
+    if [[ -z "$REMOTE_URL" ]]; then
+        printf "${RED}✗ Error: Repository URL is required. Please try again.${NC}\n\n"
+    fi
+done
 
 printf "\n"
 
