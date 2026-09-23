@@ -14,6 +14,7 @@ if ! command -v git >/dev/null 2>&1; then
 else
     GIT_VERSION=$(git --version)
     echo "✓ Git is installed: $GIT_VERSION"
+    echo
 fi
 
 # Check if already a Git repository
