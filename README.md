@@ -14,6 +14,7 @@ bash git-repo-setup.sh
 The script will ask:
 * The remote GitHub repository URL
 * The name of the main branch ('main' if this is left blank)
+* Whether you want to add a README file
 * Whether you want to create an initial commit
 * Whether you want to push to remote
 * Whether you want to delete the script from your project folder once the setup is complete
