@@ -6,7 +6,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-printf "=== Git Repository Initialiser ===\n\n"
+printf "=== Git Repository Setup Tool ===\n\n"
 printf "This script will initialise a new Git repository and set up a remote.\n\n"
 
 # Check Git is installed
