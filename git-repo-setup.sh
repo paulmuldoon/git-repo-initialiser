@@ -29,7 +29,7 @@ printf "If you need to create a new GitHub repository first, visit:\n"
 printf "https://github.com/new\n\n"
 
 # Get remote URL
-while [[ -z "$REMOTE_URL" ]]; do
+while true; do
     read -rp "Enter remote repository URL: " REMOTE_URL
     printf "\n"
 
@@ -41,12 +41,14 @@ while [[ -z "$REMOTE_URL" ]]; do
 
     # Validate URL format
     if [[ ! "$REMOTE_URL" =~ ^(https://|git@)[[:alnum:]._-]+[:/][[:alnum:]_./-]+(\.git)?$ ]]; then
-        printf "${RED}✗ Error: Invalid repository URL format. Please enter a valid Git HTTPS or SSH URL.${NC}\n\n"
+        printf "${RED}✗ Error: Invalid repository URL format.${NC}\n\n"
+        REMOTE_URL=""
         continue
     fi
-done
 
-printf "\n"
+    # URL format is valid
+    break
+done
 
 # Get branch name with default
 read -rp "Enter main branch name (default is 'main' if this is left blank): " MAIN_BRANCH
