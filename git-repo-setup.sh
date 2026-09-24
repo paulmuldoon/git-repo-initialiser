@@ -116,6 +116,25 @@ printf "\n${GREEN}✓ Repository initialised successfully.${NC}\n\n"
 printf "Remote: %s\n" "$REMOTE_URL"
 printf "Main branch: %s\n\n" "$MAIN_BRANCH"
 
+# Offer to create README.md
+if [[ -f README.md ]]; then
+    printf "${YELLOW}ℹ README.md already exists. Skipping creation.${NC}\n\n"
+else
+    read -rp "Create README.md file? (y/n): " CREATE_README
+
+    if [[ "$CREATE_README" =~ ^[Yy]$ ]]; then
+        cat > README.md <<EOF
+# $(basename "$PWD")
+
+Project description goes here.
+EOF
+
+        printf "${GREEN}✓ README.md created.${NC}\n\n"
+    else
+        printf "${YELLOW}ℹ Skipping README.md creation.${NC}\n\n"
+    fi
+fi
+
 # Optional first commit
 read -rp "Create initial commit? (y/n): " CREATE_COMMIT
 printf "\n"
