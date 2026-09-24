@@ -31,9 +31,18 @@ printf "https://github.com/new\n\n"
 # Get remote URL
 while [[ -z "$REMOTE_URL" ]]; do
     read -rp "Enter remote repository URL: " REMOTE_URL
+    printf "\n"
 
+    # Check for empty input
     if [[ -z "$REMOTE_URL" ]]; then
         printf "${RED}✗ Error: Repository URL is required. Please try again.${NC}\n\n"
+        continue
+    fi
+
+    # Validate URL format
+    if [[ ! "$REMOTE_URL" =~ ^(https://|git@)[[:alnum:]._-]+[:/][[:alnum:]_./-]+(\.git)?$ ]]; then
+        printf "${RED}✗ Error: Invalid repository URL format. Please enter a valid Git HTTPS or SSH URL.${NC}\n\n"
+        continue
     fi
 done
 
