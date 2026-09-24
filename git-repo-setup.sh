@@ -122,6 +122,7 @@ if [[ -f README.md ]]; then
     printf "${YELLOW}ℹ README.md already exists. Skipping creation.${NC}\n\n"
 else
     read -rp "Create README.md file? (y/n): " CREATE_README
+    printf "\n"
 
     if [[ "$CREATE_README" =~ ^[Yy]$ ]]; then
         cat > README.md <<EOF
